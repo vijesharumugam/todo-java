@@ -12,7 +12,7 @@ import com.todo.util.DatabaseConnection;
 
 public class TodoAppDAO {
 
-    public List<Todo> getAllTodos() {
+    public List<Todo> getAllTodos() throws SQLException {
         List<Todo> todos = new ArrayList<>();
         String sql = "SELECT * FROM todos";
 
@@ -27,8 +27,6 @@ public class TodoAppDAO {
                 boolean completed = rs.getBoolean("completed");
                 todos.add(new Todo(id, title, description, completed, rs.getTimestamp("created_at").toLocalDateTime(), rs.getTimestamp("updated_at").toLocalDateTime()));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return todos;
     }

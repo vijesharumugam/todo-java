@@ -13,7 +13,7 @@ import com.todo.util.DatabaseConnection;
 public class Main {
     public static void main(String[] args) {
         try {
-            Connection cn = DatabaseConnection.getDBConnection();
+            Connection cn = DatabaseConnection.getConnection();
             System.out.println("Connection Successful");
         } catch (SQLException e) {
             System.out.println("Connection Failed: " + e.getMessage());

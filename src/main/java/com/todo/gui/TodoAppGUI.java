@@ -6,6 +6,7 @@ import com.todo.model.Todo;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.List;
 
 public class TodoAppGUI extends JFrame {
@@ -109,10 +110,14 @@ public class TodoAppGUI extends JFrame {
     }
 
     private void loadTodos() {
-        tableModel.setRowCount(0);
-        List<Todo> todos = todoDAO.getAllTodos();
-        for (Todo todo : todos) {
-            tableModel.addRow(new Object[]{todo.getId(), todo.getTitle(), todo.getDescription(), todo.isCompleted(), todo.getCreatedAt(), todo.getUpdatedAt()});
+        try {
+            tableModel.setRowCount(0);
+            List<Todo> todos = todoDAO.getAllTodos();
+            for (Todo todo : todos) {
+                tableModel.addRow(new Object[]{todo.getId(), todo.getTitle(), todo.getDescription(), todo.isCompleted(), todo.getCreatedAt(), todo.getUpdatedAt()});
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading Todos: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
