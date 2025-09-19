@@ -127,6 +127,7 @@ public class TodoAppGUI extends JFrame {
             for (Todo todo : todos) {
                 tableModel.addRow(new Object[]{todo.getId(), todo.getTitle(), todo.getDescription(), todo.isCompleted(), todo.getCreatedAt(), todo.getUpdatedAt()});
             }
+            JOptionPane.showMessageDialog(this, "Todos loaded successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error loading Todos: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
