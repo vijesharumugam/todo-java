@@ -30,4 +30,31 @@ public class TodoAppDAO {
         }
         return todos;
     }
+
+    public void addTodo(Todo todo) throws SQLException {
+        String sql = "INSERT INTO todos (title, description, completed) VALUES (?, ?, ?)";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, todo.getTitle());
+            preparedStatement.setString(2, todo.getDescription());
+            preparedStatement.setBoolean(3, todo.isCompleted());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void updateTodo(Todo todo) throws SQLException {
+        String sql = "UPDATE todos SET title = ?, description = ?, completed = ?, updated_at = NOW() WHERE id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, todo.getTitle());
+            preparedStatement.setString(2, todo.getDescription());
+            preparedStatement.setBoolean(3, todo.isCompleted());
+            preparedStatement.setInt(4, todo.getId());
+            preparedStatement.executeUpdate();
+        }
+    }
 }
