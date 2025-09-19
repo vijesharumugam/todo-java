@@ -148,6 +148,7 @@ public class TodoAppGUI extends JFrame {
             todoDAO.addTodo(newTodo);
             loadTodos(); // Refresh the table
             clearInputFields();
+            JOptionPane.showMessageDialog(this, "Todo added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error adding todo: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -178,6 +179,7 @@ public class TodoAppGUI extends JFrame {
                 todoDAO.updateTodo(updatedTodo);
                 loadTodos(); // Refresh the table
                 clearInputFields();
+                JOptionPane.showMessageDialog(this, "Todo updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Error updating todo: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -187,6 +189,20 @@ public class TodoAppGUI extends JFrame {
     }
 
     private void deleteTodo() {
-        // Implementation for deleting a todo
+        int selectedRow = todoTable.getSelectedRow();
+
+        if (selectedRow >= 0) {
+            try {
+                int id = (int) tableModel.getValueAt(selectedRow, 0);
+                todoDAO.deleteTodo(id);
+                loadTodos(); // Refresh the table
+                clearInputFields();
+                JOptionPane.showMessageDialog(this, "Todo deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error deleting todo: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a todo to delete.", "No Todo Selected", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }

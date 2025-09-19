@@ -57,4 +57,15 @@ public class TodoAppDAO {
             preparedStatement.executeUpdate();
         }
     }
+
+    public void deleteTodo(int id) throws SQLException {
+        String sql = "DELETE FROM todos WHERE id = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        }
+    }
 }
