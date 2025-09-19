@@ -44,7 +44,27 @@ public class TodoAppDAO {
         }
     }
 
-    public void updateTodo(Todo todo) throws SQLException {
+    public Todo getTodoById(int id) throws SQLException {
+        String sql = "SELECT * FROM todos WHERE id = ?";
+        Todo todo = null;
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, id);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    String title = rs.getString("title");
+                    String description = rs.getString("description");
+                    boolean completed = rs.getBoolean("completed");
+                    todo = new Todo(id, title, description, completed, rs.getTimestamp("created_at").toLocalDateTime(), rs.getTimestamp("updated_at").toLocalDateTime());
+                }
+            }
+        }
+        return todo;
+    }
+
+    public boolean updateTodo(Todo todo) throws SQLException {
         String sql = "UPDATE todos SET title = ?, description = ?, completed = ?, updated_at = NOW() WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -54,18 +74,18 @@ public class TodoAppDAO {
             preparedStatement.setString(2, todo.getDescription());
             preparedStatement.setBoolean(3, todo.isCompleted());
             preparedStatement.setInt(4, todo.getId());
-            preparedStatement.executeUpdate();
+            return preparedStatement.executeUpdate() > 0;
         }
     }
 
-    public void deleteTodo(int id) throws SQLException {
+    public boolean deleteTodo(int id) throws SQLException {
         String sql = "DELETE FROM todos WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+            return preparedStatement.executeUpdate() > 0;
         }
     }
 }
