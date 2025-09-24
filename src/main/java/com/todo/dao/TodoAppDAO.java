@@ -1,22 +1,27 @@
 package com.todo.dao;
 
-import com.todo.model.Todo;
-import com.todo.util.DatabaseConnection;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import java.sql.*;
+import com.todo.model.Todo;
+import com.todo.util.DatabaseConnection;
 
 public class TodoAppDAO {
     private static final String SELECT_ALL_STRING = "SELECT * FROM todos ORDER BY created_at DESC";
     private static final String INSERT_TODO_STRING = "INSERT INTO todos (title, description, completed, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
     private static final String SELECT_TODO_BY_ID = "SELECT * FROM todos WHERE id = ?";
     private static final String UPDATE_TODO = "UPDATE todos SET title = ?, description = ?, completed = ?, updated_at = ? WHERE id = ?";
-    private static final String DELETE_TODO = "DELETE * FROM todos WHERE id = ?";
-    private static final String FILTER_TODOS = "SELECT * FROM todos WHERE completed = ? ORDER BY created_at DESC";
+    private static final String DELETE_TODO = "DELETE FROM todos WHERE id = ?";
+    private static final String FILTER_TODO = "SELECT * FROM todos WHERE completed = ? ORDER BY created_at DESC";
 
     public boolean deleteTodo(int id) throws SQLException
     {
@@ -95,12 +100,16 @@ public class TodoAppDAO {
         List<Todo> todos = new ArrayList<>();
         try(
             Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(FILTER_TODOS);
+            PreparedStatement stmt = conn.prepareStatement(FILTER_TODO);
         )
         {
             stmt.setBoolean(1,selected);
 
             ResultSet res = stmt.executeQuery();
+            while(res.next()){
+                todos.add(getTodoRow(res));
+                
+            }
         }
         return todos;
 

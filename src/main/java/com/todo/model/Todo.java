@@ -29,7 +29,7 @@ public class Todo {
         this.updated_at = updated_at;
     }
 
-    // Getters and Setters
+  
     public int getId() {
         return id;
     }
